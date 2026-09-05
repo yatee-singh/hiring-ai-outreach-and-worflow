@@ -19,24 +19,20 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-
+import { campaignStore } from "../lib/campaign";
 import { auth } from "../lib/auth";
+import { JobCampaign } from "../types/campaign";
 
 const API_URL = "http://localhost:8000";
 
-interface Campaign {
-  id: string;
-  name: string;
-  status: string;
-  created_at: string;
-}
+
 
 export default function DashboardPage() {
   const navigate = useNavigate();
 
   const user = auth.getUser();
 
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [campaigns, setCampaigns] = useState<JobCampaign[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -100,14 +96,14 @@ export default function DashboardPage() {
         throw new Error("Failed to create campaign");
       }
 
-      const newCampaign: Campaign = await response.json();
+      const newCampaign: JobCampaign = await response.json();
 
       setCampaigns((current) => [newCampaign, ...current]);
 
       setCampaignName("");
       setShowCreateModal(false);
 
-      navigate(`/job-campaigns/${newCampaign.id}`);
+      navigate(`/job-campaigns/${newCampaign.id}/job-description`);
     } catch (error) {
       console.error("Failed to create campaign:", error);
     } finally {
@@ -256,32 +252,7 @@ export default function DashboardPage() {
               No job campaigns yet
             </Typography>
 
-            <Typography
-              variant="body2"
-              sx={{
-                mt: 1,
-                color: "#6b7280",
-              }}
-            >
-              Create your first campaign to get started.
-            </Typography>
-
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => setShowCreateModal(true)}
-              sx={{
-                mt: 3,
-                borderRadius: 2,
-                textTransform: "none",
-                backgroundColor: "#111827",
-                "&:hover": {
-                  backgroundColor: "#1f2937",
-                },
-              }}
-            >
-              Create Campaign
-            </Button>
+            
           </Box>
         ) : (
           <Grid container spacing={3}>
@@ -308,14 +279,15 @@ export default function DashboardPage() {
                   }}
                 >
                   <CardActionArea
-                    onClick={() =>
-                      navigate(
-                        `/job-campaigns/${campaign.id}`
-                      )
-                    }
-                    sx={{
-                      height: "100%",
-                    }}
+                    onClick={() => {
+                        campaignStore.setCampaign(
+                          campaign
+                        );
+                    
+                        navigate(
+                          `/job-campaigns/${campaign.id}`
+                        );
+                      }}
                   >
                     <CardContent
                       sx={{

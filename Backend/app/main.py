@@ -3,9 +3,11 @@ from fastapi import FastAPI
 from app.routes.people import router as people_router
 from app.routes.login import router as login_router
 from app.routes.job_campaigns import router as job_campaigns_router
+from app.routes.job_description import router as job_description_router
 from app.db.database import Base, engine
 from app.db.models import Candidate
 from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(
     title="AI Recruiter API",
@@ -22,6 +24,7 @@ app.add_middleware(
 app.include_router(people_router)
 app.include_router(login_router)
 app.include_router(job_campaigns_router)
+app.include_router(job_description_router)
 @app.get("/")
 async def root():
     return {
