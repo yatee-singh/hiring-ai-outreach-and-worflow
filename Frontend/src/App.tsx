@@ -9,6 +9,7 @@ import CampaignLayout from "./components/CampaignLayout";
 import JobDescriptionPage from "./pages/campaign/JobDescriptionPage";
 import PeopleSearchPage from "./pages/campaign/PeopleSearchPage";
 import SourcesPage from "./pages/campaign/SourcesPage";
+import CallDashboard from "./pages/campaign/CallDashboard";
 
 // import ApplicantsPage from "./pages/campaign/hiring-ai/ApplicantsPage";
 // import Round1Page from "./pages/campaign/hiring-ai/Round1Page";
@@ -51,8 +52,8 @@ export default function App(): JSX.Element {
           />
 
           <Route
-            path="people-search/sources"
-            element={<SourcesPage />}
+            path="call-dashboard"
+            element={<CallDashboard />}
           />
 
           {/* <Route

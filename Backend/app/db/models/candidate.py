@@ -1,7 +1,7 @@
-from datetime import datetime
 import uuid
+from datetime import datetime
 
-from sqlalchemy import DateTime, Integer, String, Text, func
+from sqlalchemy import String, Text, DateTime, ForeignKey, JSON
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -9,18 +9,24 @@ from app.db.database import Base
 
 
 class Candidate(Base):
-    __tablename__ = "candidates"
+    __tablename__ = "candidate"
 
-    id: Mapped[int] = mapped_column(
-        Integer,
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
         primary_key=True,
-        autoincrement=True,
+        default=uuid.uuid4,
     )
 
-    apollo_id: Mapped[str] = mapped_column(
-        String(255),
-        unique=True,
-        index=True,
+    job_campaign_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("job_campaign.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+
+    # PDL's person ID
+    pdl_id: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
     )
 
     first_name: Mapped[str | None] = mapped_column(
@@ -33,12 +39,32 @@ class Candidate(Base):
         nullable=True,
     )
 
-    title: Mapped[str | None] = mapped_column(
+    full_name: Mapped[str | None] = mapped_column(
         String(500),
         nullable=True,
     )
 
-    company: Mapped[str | None] = mapped_column(
+    email: Mapped[str | None] = mapped_column(
+        String(320),
+        nullable=True,
+    )
+
+    phone: Mapped[str | None] = mapped_column(
+        String(50),
+        nullable=True,
+    )
+
+    linkedin_url: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    job_title: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    company_name: Mapped[str | None] = mapped_column(
         String(500),
         nullable=True,
     )
@@ -48,23 +74,51 @@ class Candidate(Base):
         nullable=True,
     )
 
-    linkedin_url: Mapped[str | None] = mapped_column(
-        String(1000),
+    skills: Mapped[list | None] = mapped_column(
+        JSON,
         nullable=True,
     )
 
-    has_email: Mapped[bool | None] = mapped_column(
+    experience: Mapped[list | None] = mapped_column(
+        JSON,
         nullable=True,
     )
 
-    has_direct_phone: Mapped[str | None] = mapped_column(
-        String(50),
+    education: Mapped[list | None] = mapped_column(
+        JSON,
+        nullable=True,
+    )
+
+    # Keep the original PDL response.
+    raw_data: Mapped[dict | None] = mapped_column(
+        JSON,
         nullable=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
+        nullable=False,
     )
 
+    ##new 
 
+    call_id: Mapped[str | None] = mapped_column(
+            String(255),
+            nullable=True,
+        )
+
+    call_status: Mapped[str | None] = mapped_column(
+        String(50),
+        nullable=True,
+    )
+
+    call_summary: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    call_transcript: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )

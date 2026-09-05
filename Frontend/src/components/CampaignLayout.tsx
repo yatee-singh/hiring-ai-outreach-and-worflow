@@ -53,8 +53,8 @@ export default function CampaignLayout(): JSX.Element {
           path: `/job-campaigns/${campaignId}/people-search`,
         },
         {
-          label: "Sources",
-          path: `/job-campaigns/${campaignId}/people-search/sources`,
+          label: "Call Dashboard",
+          path: `/job-campaigns/${campaignId}/call-dashboard`,
         },
       ],
     },
@@ -82,7 +82,7 @@ export default function CampaignLayout(): JSX.Element {
   ];
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh", background:'white' }}>
       <Drawer
         variant="permanent"
         sx={{

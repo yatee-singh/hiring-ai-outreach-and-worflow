@@ -1,18 +1,20 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
 from app.db.models.job_campaign import JobCampaign
 from app.db.models.job_description import JobDescription
+from app.db.models.candidate import Candidate
+from app.db.models.organization import Organization
 from app.schemas.job_campaigns import (
     JobCampaignCreate,
     JobCampaignResponse,
     JobDescriptionResponse,
 )
-
+from app.services.outreach import call_candidate
 router = APIRouter(
     prefix="/organizations",
     tags=["Job Campaigns"],
@@ -98,3 +100,43 @@ def get_job_description(
         )
 
     return job_description
+
+@router.post("/{campaign_id}/outreach")
+def start_outreach(
+    campaign_id: str,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
+    candidates = (
+    db.query(Candidate)
+    .filter(
+        Candidate.job_campaign_id == campaign_id
+    )
+    .all())
+
+    campaign = (
+        db.query(JobCampaign)
+        .filter(JobCampaign.id == campaign_id)
+        .first()
+    )
+
+    if not campaign:
+        raise HTTPException(
+            status_code=404,
+            detail="Campaign not found",
+        )
+
+    organization = campaign.organization
+
+
+    for candidate in candidates:
+        background_tasks.add_task(
+            call_candidate,
+            db,
+            str(candidate.id),
+            organization.name
+        )
+
+    return {
+    "message": f"{len(candidates)} calls queued"
+    }
