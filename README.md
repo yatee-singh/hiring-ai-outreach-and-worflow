@@ -231,44 +231,97 @@ erDiagram
 
 ---
 
-# Two Flows, One Platform
+## Current Architecture
 
-The two workflows address different parts of the recruiting lifecycle but share the same underlying platform.
+The application follows a **React + FastAPI + PostgreSQL** architecture, with dedicated service layers for workflow execution, candidate search, Voice AI, AI evaluation, and analytics.
 
 ```text
-                    AI RECRUITING PLATFORM
-                             │
-             ┌───────────────┴───────────────┐
-             │                               │
-             ▼                               ▼
-     AI HIRING ASSISTANT              PEOPLE OUTREACH
-             │                               │
-             ▼                               ▼
-     Workflow Builder                    Job Description
-             │                               │
-             ▼                               ▼
-     Configure Agents                   People Search
-             │                               │
-             ▼                               ▼
-    Configure Criteria                 AI Candidate Ranking
-             │                               │
-             ▼                               ▼
-           RUN                         Filter Candidates
-             │                               │
-             ▼                               ▼
-      Voice Interviews                  Voice Outreach
-             │                               │
-             ▼                               ▼
-        AI Evaluation                    Webhook
-             │                               │
-             ▼                               ▼
-    Candidate Progression             Conversation Analysis
-             │                               │
-             └───────────────┬───────────────┘
-                             ▼
-                     LIVE ANALYTICS
+                         ┌─────────────────────────┐
+                         │      React Frontend      │
+                         │  React + TypeScript      │
+                         │  Material UI + Vite      │
+                         └────────────┬────────────┘
+                                      │
+                                  REST APIs
+                                      │
+                                      ▼
+                         ┌─────────────────────────┐
+                         │     FastAPI Backend      │
+                         │                         │
+                         │  API Routes             │
+                         │  Business Logic         │
+                         │  Service Layer          │
+                         └───────┬─────────┬───────┘
+                                 │         │
+                    ┌────────────┘         └─────────────┐
+                    ▼                                    ▼
+          ┌──────────────────┐                 ┌──────────────────┐
+          │    PostgreSQL    │                 │ External Services│
+          │                  │                 │                  │
+          │ Campaigns        │                 │ Hunar.AI         │
+          │ Candidates       │                 │ People Search    │
+          │ Applicants       │                 │ AI / LLM         │
+          │ Workflows        │                 │                  │
+          │ Workflow Rounds  │                 └──────────────────┘
+          │ Evaluations      │
+          └──────────────────┘
 ```
 
-The core idea is to make recruiting **configurable and execution-driven**:
+## Production-Scale Architecture
 
-> **Recruiters define the workflow and criteria once, click Run, and the platform handles candidate conversations, evaluation, progression, and analytics automatically.**
+To support **tens of thousands of applicants, candidates, Voice AI calls, and AI evaluations**, I would evolve the current architecture from a synchronous API-driven system into an **asynchronous, event-driven architecture**.
+
+The key principle would be:
+
+> **Keep API requests lightweight and move expensive work such as candidate search, outreach, call processing, and AI evaluation into background workers.**
+
+```text
+                         ┌──────────────────────┐
+                         │    React Frontend    │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │   Load Balancer /    │
+                         │      API Gateway     │
+                         └──────────┬───────────┘
+                                    │
+                   ┌────────────────┴────────────────┐
+                   ▼                                 ▼
+          ┌──────────────────┐              ┌──────────────────┐
+          │  FastAPI API     │              │ Authentication / │
+          │  Servers         │              │ Authorization    │
+          └────────┬─────────┘              └──────────────────┘
+                   │
+                   ▼
+          ┌──────────────────┐
+          │  Message Broker  │
+          │ RabbitMQ / Kafka │
+          └────────┬─────────┘
+                   │
+       ┌───────────┼────────────┬──────────────┐
+       ▼           ▼            ▼              ▼
+   ┌────────┐ ┌──────────┐ ┌──────────┐ ┌────────────┐
+   │ Search │ │ Workflow │ │ Outreach │ │ Evaluation │
+   │Workers │ │ Workers  │ │ Workers  │ │  Workers   │
+   └───┬────┘ └────┬─────┘ └────┬─────┘ └─────┬──────┘
+       │            │            │              │
+       └────────────┴────────────┴──────────────┘
+                            │
+                            ▼
+                   ┌─────────────────┐
+                   │   PostgreSQL    │
+                   │  Primary + Read │
+                   │    Replicas     │
+                   └────────┬────────┘
+                            │
+                  ┌─────────┴─────────┐
+                  ▼                   ▼
+             ┌──────────┐       ┌────────────┐
+             │  Redis   │       │ Analytics  │
+             │  Cache   │       │ / OLAP DB  │
+             └──────────┘       └────────────┘
+```
+
+
+
