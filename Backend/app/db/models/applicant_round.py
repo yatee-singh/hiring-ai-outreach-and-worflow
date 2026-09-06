@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import DateTime, Float, ForeignKey, JSON, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
+from sqlalchemy.dialects.postgresql import JSONB
 from app.db.database import Base
 
 
@@ -48,9 +48,9 @@ class ApplicantRound(Base):
         nullable=True,
     )
 
-    call_summary: Mapped[str | None] = mapped_column(
-        String,
-        nullable=True,
+    call_summary: Mapped[dict | None] = mapped_column(
+    JSONB,
+    nullable=True,
     )
 
     score: Mapped[float | None] = mapped_column(
@@ -98,3 +98,10 @@ class ApplicantRound(Base):
     workflow_round: Mapped["WorkflowRound"] = relationship(
         "WorkflowRound",
     )
+
+    call_status: Mapped[str | None] = mapped_column(
+    String(50),
+    nullable=True,
+)
+
+    

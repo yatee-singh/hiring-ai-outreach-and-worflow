@@ -232,7 +232,7 @@ export default function WorkflowRoundDialog({
           </Box>
 
           {/* Passing Score */}
-          <TextField
+          {/* <TextField
             fullWidth
             type="number"
             label="Passing Score"
@@ -250,7 +250,7 @@ export default function WorkflowRoundDialog({
               max: 100,
               style: { color: "#000" },
             }}
-          />
+          /> */}
 
           {/* Criteria */}
           <Box>

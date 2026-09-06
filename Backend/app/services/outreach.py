@@ -23,7 +23,7 @@ def call_candidate(
         return
 
     try:
-        result = start_call(candidate.phone, candidate.full_name, job_name, organization_name, candidate_id)
+        result = start_call(candidate.phone, candidate.full_name, job_name, organization_name, None,candidate_id)
 
         print("Hunar response:", result.get("id"))
 
@@ -37,3 +37,5 @@ def call_candidate(
     except Exception as e:
         print(f"Failed to call candidate {candidate_id}: {e}")
         db.rollback()
+
+

@@ -69,14 +69,7 @@ export default function CampaignLayout(): JSX.Element {
           label: "Workflow Builder",
           path: `/job-campaigns/${campaignId}/workflow-builder`,
         },
-        {
-          label: "Final Round",
-          path: `/job-campaigns/${campaignId}/hiring-ai/final-round`,
-        },
-        {
-          label: "Call Dashboard",
-          path: `/job-campaigns/${campaignId}/hiring-ai/call-dashboard`,
-        },
+       
       ],
     },
   ];

@@ -9,7 +9,7 @@ from app.db.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import workflow
 from app.routes import webhooks
-
+from app.routes.outreach import router as outreach_router
 Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="AI Recruiter API",
@@ -22,7 +22,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
+app.include_router(outreach_router, prefix="/api")
 app.include_router(people_router)
 app.include_router(login_router)
 app.include_router(job_campaigns_router)
