@@ -26,7 +26,7 @@ export default function App(): JSX.Element {
         <Route path="/login" element={<LoginPage />} />
 
         <Route
-          path="/dashboard"
+          path="/"
           element={
             <ProtectedRoute>
               <DashboardPage />
