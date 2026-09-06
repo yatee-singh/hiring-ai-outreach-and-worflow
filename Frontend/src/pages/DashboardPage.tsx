@@ -22,8 +22,8 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { campaignStore } from "../lib/campaign";
 import { auth } from "../lib/auth";
 import { JobCampaign } from "../types/campaign";
+import { API_URL } from "../config/api";
 
-const API_URL = "http://localhost:8000";
 
 
 

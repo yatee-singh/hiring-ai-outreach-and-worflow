@@ -1,6 +1,6 @@
 import { Applicant } from "../types";
+import { API_URL } from "../../../config/api";
 
-const API_BASE_URL = "http://localhost:8000";
 export async function fetchApplicants(
   jobId: string,
   status?: string
@@ -14,7 +14,7 @@ export async function fetchApplicants(
   const queryString = params.toString();
 
   const response = await fetch(
-    `${API_BASE_URL}/job-campaigns/${jobId}/applicants${
+    `${API_URL}/job-campaigns/${jobId}/applicants${
       queryString ? `?${queryString}` : ""
     }`
   );

@@ -34,6 +34,7 @@ import {
 import { useCampaign } from "../../hook/useCampaign";
 import { useNavigate } from "react-router-dom";
 import { JobDescriptionForm } from "../../types/jobDescription";
+import { API_URL } from "../../config/api";
 const JobDescriptionPage = () => {
 
   const [form, setForm] = useState({
@@ -68,7 +69,7 @@ const JobDescriptionPage = () => {
     const fetchJobDescription = async () => {
         try {
         const response = await fetch(
-            `http://localhost:8000/job-descriptions/campaign/${campaign.id}`
+            `${API_URL}/job-descriptions/campaign/${campaign.id}`
         );
 
         if (!response.ok) {
@@ -238,7 +239,7 @@ const JobDescriptionPage = () => {
   
     try {
       const response = await fetch(
-        "http://localhost:8000/job-descriptions/",
+        `${API_URL}/job-descriptions/`,
         {
           method: "POST",
           headers: {

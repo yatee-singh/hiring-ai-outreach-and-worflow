@@ -29,11 +29,9 @@ import {
 import { useCampaign } from "../../hook/useCampaign";
 import { OutreachFilters } from "../../components/OutreachModal";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../config/api";
 
-// Replace this with your actual API client
-const API_BASE_URL = "http://localhost:8000";
 
-  
 
 interface Candidate {
   id: string;
@@ -75,7 +73,7 @@ export default function PeopleSearchPage(): JSX.Element {
     campaignId: string | undefined
   ): Promise<OutreachResponse> => {
     const response = await fetch(
-      `http://localhost:8000/organizations/${campaignId}/outreach`,
+      `${API_URL}/organizations/${campaignId}/outreach`,
       {
         method: "POST",
         headers: {
@@ -115,7 +113,7 @@ export default function PeopleSearchPage(): JSX.Element {
       setError(null);
 
       const response = await fetch(
-        `${API_BASE_URL}/people/${campaign?.id}`
+        `${API_URL}/people/${campaign?.id}`
       );
 
       if (!response.ok) {
@@ -151,7 +149,7 @@ export default function PeopleSearchPage(): JSX.Element {
       setError(null);
 
       const response = await fetch(
-        `${API_BASE_URL}/people/search/${campaign?.id}`,
+        `${API_URL}/people/search/${campaign?.id}`,
         {
           method: "POST",
         }
@@ -192,7 +190,7 @@ export default function PeopleSearchPage(): JSX.Element {
       setError(null);
 
       const response = await fetch(
-        `${API_BASE_URL}/people/rank/${jobCampaignId}`,
+        `${API_URL}/people/rank/${jobId}`,
         {
           method: "POST",
         }

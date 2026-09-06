@@ -6,8 +6,9 @@ import {
     WorkflowRoundCreate,
     WorkflowRoundUpdate,
   } from "./workflowTypes";
+  import { API_URL } from "../../../config/api";
   
-  const API_BASE_URL = "http://localhost:8000";
+
   
   async function handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
@@ -34,7 +35,7 @@ import {
     jobId: string
   ): Promise<WorkflowResponse> {
     const response = await fetch(
-      `${API_BASE_URL}/job-campaigns/${jobId}/workflow`
+      `${API_URL}/job-campaigns/${jobId}/workflow`
     );
   
     return handleResponse<WorkflowResponse>(response);
@@ -45,7 +46,7 @@ import {
     payload: WorkflowRoundCreate
   ): Promise<WorkflowRound> {
     const response = await fetch(
-      `${API_BASE_URL}/job-campaigns/${jobId}/workflow/rounds`,
+      `${API_URL}/job-campaigns/${jobId}/workflow/rounds`,
       {
         method: "POST",
         headers: {
@@ -63,7 +64,7 @@ import {
     payload: WorkflowRoundUpdate
   ): Promise<WorkflowRound> {
     const response = await fetch(
-      `${API_BASE_URL}/workflow-rounds/${roundId}`,
+      `${API_URL}/workflow-rounds/${roundId}`,
       {
         method: "PATCH",
         headers: {
@@ -80,7 +81,7 @@ import {
     roundId: string
   ): Promise<void> {
     const response = await fetch(
-      `${API_BASE_URL}/workflow-rounds/${roundId}`,
+      `${API_URL}/workflow-rounds/${roundId}`,
       {
         method: "DELETE",
       }
@@ -99,7 +100,7 @@ import {
     roundId: string
   ): Promise<RunWorkflowRoundResponse> {
     const response = await fetch(
-      `${API_BASE_URL}/workflow-rounds/${roundId}/run`,
+      `${API_URL}/workflow-rounds/${roundId}/run`,
       {
         method: "POST",
       }

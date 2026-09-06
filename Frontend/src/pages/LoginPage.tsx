@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { auth } from "../lib/auth";
+import { API_URL } from "../config/api";
 
 interface LoginResponse {
   success: boolean;
@@ -76,9 +77,7 @@ export default function LoginPage() {
       setLoading(true);
       setError("");
 
-      const response = await fetch(
-        "http://localhost:8000/api/login",
-        {
+        const response = await fetch(`${API_URL}/api/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -87,9 +86,7 @@ export default function LoginPage() {
             username: formData.username,
             password: formData.password,
           }),
-        }
-      );
-
+        });
       const data = await response.json();
 
       if (!response.ok) {
