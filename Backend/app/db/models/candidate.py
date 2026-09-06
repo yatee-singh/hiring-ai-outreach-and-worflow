@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import String, Text, DateTime, ForeignKey, JSON
+from sqlalchemy import String, Text, DateTime, ForeignKey, JSON, JSONB
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -113,9 +113,9 @@ class Candidate(Base):
         nullable=True,
     )
 
-    call_summary: Mapped[str | None] = mapped_column(
-        Text,
-        nullable=True,
+    call_summary: Mapped[dict | None] = mapped_column(
+    JSONB,
+    nullable=True,
     )
 
     call_transcript: Mapped[str | None] = mapped_column(

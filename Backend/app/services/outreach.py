@@ -23,11 +23,11 @@ def call_candidate(
         return
 
     try:
-        result = start_call(candidate.phone, candidate.full_name, job_name, organization_name)
+        result = start_call(candidate.phone, candidate.full_name, job_name, organization_name, candidate_id)
 
         print("Hunar response:", result)
 
-        call_id = result.get("call_id") if result else None
+        call_id = result.get("id") if result else None
 
         if call_id:
             candidate.call_id = call_id

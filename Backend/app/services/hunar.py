@@ -28,8 +28,10 @@ def start_call(
     # Only include request_id when it is provided
     if request_id is not None:
         payload["request_id"] = request_id
+    
+    payload["callback_config"] = { "call_summary_callback_url": ( "https://hiring-ai-outreach-and-worflow.onrender.com/webhooks/hunar" ) }
 
-    print(payload)
+    print("Hunar payload:", payload)
 
     try:
         response = requests.post(
