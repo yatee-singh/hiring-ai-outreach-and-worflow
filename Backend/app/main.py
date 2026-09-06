@@ -10,6 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import workflow
 from app.routes import webhooks
 from app.routes.outreach import router as outreach_router
+from app.routes.applicant_rounds import router as applicant_rounds_router
+
 Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="AI Recruiter API",
@@ -34,6 +36,7 @@ app.include_router(
 )
 app.include_router(workflow.router)
 app.include_router(applicant_router)
+app.include_router(applicant_rounds_router)
 @app.get("/")
 async def root():
     return {

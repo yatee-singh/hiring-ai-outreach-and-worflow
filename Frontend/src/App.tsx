@@ -13,6 +13,7 @@ import CallDashboard from "./pages/campaign/CallDashboard";
 import WorkflowBuilder from "./pages/hiring-ai/WorkflowBuilder";
 import Applicants from "./pages/applicants/Applicants";
 import PeopleDashboard from "./pages/peopleDashboard/PeopleDashboard";
+import RoundAnalyticsPage from "./pages/campaign/rounds/RoundAnalyticsPage";
 // import ApplicantsPage from "./pages/campaign/hiring-ai/ApplicantsPage";
 // import Round1Page from "./pages/campaign/hiring-ai/Round1Page";
 // import FinalRoundPage from "./pages/campaign/hiring-ai/FinalRoundPage";
@@ -63,10 +64,14 @@ export default function App(): JSX.Element {
             element={<Applicants />}
           />
 
-<Route
+          <Route
             path="workflow-builder"
             element={<WorkflowBuilder />}
           />
+
+          <Route
+            path="rounds-dashboard"
+            element={<RoundAnalyticsPage/>}/>
 
           {/* <Route
             path="hiring-ai/applicants"
