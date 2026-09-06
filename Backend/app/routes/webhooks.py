@@ -1,8 +1,13 @@
-from fastapi import APIRouter, Request, Depends
+from datetime import datetime
+
+from fastapi import APIRouter, BackgroundTasks, Depends, Request
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
 from app.db.models.candidate import Candidate
+from app.db.models.applicant_round import ApplicantRound
+from app.services.applicant_evaluator import evaluate_applicant_round
+
 
 router = APIRouter()
 
@@ -21,6 +26,7 @@ async def hunar_webhook(
     print("REQUEST ID:", payload.get("request_id"), flush=True)
     print("CALL ID:", payload.get("call_id"), flush=True)
 
+    # Only process call summary events
     if payload.get("event_type") != "call_summary":
         print("EVENT IGNORED", flush=True)
 
@@ -89,7 +95,10 @@ async def hunar_webhook(
         flush=True,
     )
 
-    print("========== HUNAR WEBHOOK SUCCESS ==========", flush=True)
+    print(
+        "========== HUNAR WEBHOOK SUCCESS ==========",
+        flush=True,
+    )
 
     return {
         "success": True,
@@ -97,9 +106,11 @@ async def hunar_webhook(
         "call_id": candidate.call_id,
     }
 
+
 @router.post("/hunar/applicant-round")
 async def hunar_applicant_round_webhook(
     request: Request,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
     print(
@@ -114,8 +125,10 @@ async def hunar_applicant_round_webhook(
     print("REQUEST ID:", payload.get("request_id"), flush=True)
     print("CALL ID:", payload.get("call_id"), flush=True)
 
+    # Only process call summary events
     if payload.get("event_type") != "call_summary":
         print("EVENT IGNORED", flush=True)
+
         return {
             "success": True,
             "message": "Event ignored",
@@ -125,6 +138,7 @@ async def hunar_applicant_round_webhook(
 
     if not request_id:
         print("ERROR: request_id missing", flush=True)
+
         return {
             "success": False,
             "message": "request_id missing",
@@ -136,13 +150,18 @@ async def hunar_applicant_round_webhook(
         .first()
     )
 
-    print("APPLICANT ROUND RESULT:", applicant_round, flush=True)
+    print(
+        "APPLICANT ROUND RESULT:",
+        applicant_round,
+        flush=True,
+    )
 
     if not applicant_round:
         print(
             f"ERROR: ApplicantRound not found: {request_id}",
             flush=True,
         )
+
         return {
             "success": False,
             "message": "ApplicantRound not found",
@@ -156,7 +175,10 @@ async def hunar_applicant_round_webhook(
     applicant_round.hunar_call_id = payload.get("call_id")
     applicant_round.call_status = payload.get("status")
     applicant_round.call_summary = payload.get("result")
-    # applicant_round.call_transcript = payload.get("transcript") KEEPING IT SIMPLE FOR MVP< JUST EVALUATING FROM SUMMARY
+
+    # Keeping it simple for MVP:
+    # evaluate candidate using the call summary.
+    # applicant_round.call_transcript = payload.get("transcript")
 
     if payload.get("status") in [
         "completed",
@@ -166,14 +188,22 @@ async def hunar_applicant_round_webhook(
         applicant_round.completed_at = datetime.utcnow()
 
     print("UPDATING APPLICANT ROUND:", flush=True)
+
     print(
         "hunar_call_id:",
         applicant_round.hunar_call_id,
         flush=True,
     )
+
     print(
         "call_status:",
         applicant_round.call_status,
+        flush=True,
+    )
+
+    print(
+        "call_summary:",
+        applicant_round.call_summary,
         flush=True,
     )
 
@@ -182,6 +212,12 @@ async def hunar_applicant_round_webhook(
     print("DATABASE COMMIT SUCCESSFUL", flush=True)
 
     db.refresh(applicant_round)
+
+    # Run evaluation after webhook processing
+    background_tasks.add_task(
+        evaluate_applicant_round,
+        str(applicant_round.id),
+    )
 
     print(
         "FINAL APPLICANT ROUND:",
@@ -201,3 +237,4 @@ async def hunar_applicant_round_webhook(
         "applicant_round_id": str(applicant_round.id),
         "call_id": applicant_round.hunar_call_id,
     }
+
