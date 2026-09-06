@@ -97,7 +97,7 @@ export default function CampaignLayout(): JSX.Element {
         <Box sx={{ px: 2, pt: 2 }}>
           <Button
             startIcon={<ArrowBackIcon />}
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/")}
             sx={{
               textTransform: "none",
               color: "text.secondary",

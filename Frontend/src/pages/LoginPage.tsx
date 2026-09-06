@@ -101,7 +101,7 @@ export default function LoginPage() {
 
       auth.login(loginData.user);
 
-      navigate("/dashboard", {
+      navigate("/", {
         replace: true,
       });
     } catch (err) {
