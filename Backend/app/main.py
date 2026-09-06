@@ -4,8 +4,10 @@ from app.routes.people import router as people_router
 from app.routes.login import router as login_router
 from app.routes.job_campaigns import router as job_campaigns_router
 from app.routes.job_description import router as job_description_router
+from app.routes.applicants import router as applicant_router
 from app.db.database import Base, engine
 from fastapi.middleware.cors import CORSMiddleware
+from app.routes import workflow
 from app.routes import webhooks
 
 Base.metadata.create_all(bind=engine)
@@ -30,6 +32,8 @@ app.include_router(
     prefix="/webhooks",
     tags=["webhooks"]
 )
+app.include_router(workflow.router)
+app.include_router(applicant_router)
 @app.get("/")
 async def root():
     return {

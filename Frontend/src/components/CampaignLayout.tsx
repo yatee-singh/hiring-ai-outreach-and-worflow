@@ -63,11 +63,11 @@ export default function CampaignLayout(): JSX.Element {
       items: [
         {
           label: "Applicants",
-          path: `/job-campaigns/${campaignId}/hiring-ai/applicants`,
+          path: `/job-campaigns/${campaignId}/applicants`,
         },
         {
-          label: "Round 1",
-          path: `/job-campaigns/${campaignId}/hiring-ai/round-1`,
+          label: "Workflow Builder",
+          path: `/job-campaigns/${campaignId}/workflow-builder`,
         },
         {
           label: "Final Round",

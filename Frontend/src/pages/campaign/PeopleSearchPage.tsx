@@ -51,16 +51,12 @@ interface PeopleSearchResponse {
   candidates: Candidate[];
 }
 
-interface PeopleSearchPageProps {
-  jobCampaignId: string;
-}
 
 interface OutreachResponse {
     message: string;
   }
 
-export default function PeopleSearchPage({
-}: PeopleSearchPageProps): JSX.Element {
+export default function PeopleSearchPage(): JSX.Element {
 
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
@@ -301,7 +297,7 @@ export default function PeopleSearchPage({
           }}
         >
         <Box>
-            <Typography
+          <Typography
             variant="h4"
             fontWeight={700}
             sx={{ color: "black" }}
@@ -322,6 +318,7 @@ export default function PeopleSearchPage({
            <Stack
            direction="row"
            spacing={1}
+           sx={{ margin:"auto",mr:'0px' }}
         //    justifyContent="flex-end"
         //    alignItems="center"
          >

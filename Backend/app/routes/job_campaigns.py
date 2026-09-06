@@ -134,7 +134,8 @@ def start_outreach(
             call_candidate,
             db,
             str(candidate.id),
-            organization.name
+            str(organization.name),
+            str(campaign.name)
         )
 
     return {

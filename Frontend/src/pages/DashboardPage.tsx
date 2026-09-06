@@ -103,7 +103,7 @@ export default function DashboardPage() {
       setCampaignName("");
       setShowCreateModal(false);
 
-      navigate(`/job-campaigns/${newCampaign.id}/job-description`);
+     // navigate(`/job-campaigns/${newCampaign.id}/job-description`);
     } catch (error) {
       console.error("Failed to create campaign:", error);
     } finally {

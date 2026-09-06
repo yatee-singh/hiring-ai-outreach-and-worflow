@@ -67,3 +67,16 @@ class JobCampaign(Base):
         uselist=False,
         cascade="all, delete-orphan",
     )
+
+    applicants: Mapped[list["Applicant"]] = relationship(
+    "Applicant",
+    back_populates="job_campaign",
+    cascade="all, delete-orphan",)
+
+    workflow_rounds: Mapped[list["WorkflowRound"]] = relationship(
+    "WorkflowRound",
+    back_populates="job_campaign",
+    cascade="all, delete-orphan",
+    order_by="WorkflowRound.order",
+)
+

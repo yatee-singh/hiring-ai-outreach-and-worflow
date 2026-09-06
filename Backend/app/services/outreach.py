@@ -7,7 +7,8 @@ from app.db.models.candidate import Candidate
 def call_candidate(
     db: Session,
     candidate_id: str,
-    organization_name : str
+    organization_name : str,
+    job_name: str
 ):
     candidate = (
         db.query(Candidate)
@@ -22,7 +23,7 @@ def call_candidate(
         return
 
     try:
-        result = start_call(candidate, organization_name)
+        result = start_call(candidate.phone, candidate.full_name, job_name, organization_name)
 
         print("Hunar response:", result)
 
