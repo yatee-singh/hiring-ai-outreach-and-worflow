@@ -25,10 +25,10 @@ def call_candidate(
     try:
         result = start_call(candidate.phone, candidate.full_name, job_name, organization_name, candidate_id)
 
-        print("Hunar response:", result)
+        print("Hunar response:", result.get("id"))
 
         call_id = result.get("id") if result else None
-
+        print("cakk_id",call_id,result.get("id"),result.get('id'))
         if call_id:
             candidate.call_id = call_id
             candidate.call_status = "initiated"
